@@ -1387,14 +1387,17 @@ int main(int argc, char* argv[])
       }
 
       const auto isAudioPlugin = projectType == "audioplug";
+      const auto pluginFormats = juce::StringArray::fromTokens(
+        jucerProject.getProperty("pluginFormats").toString(), ",", {});
       const auto hasJuceAudioProcessorsModule =
         jucerProject.getChildWithName("MODULES")
           .getChildWithProperty("id", "juce_audio_processors")
           .isValid();
 
       const auto hasVst2Interface = jucerVersionAsTuple > Version{4, 2, 3};
-      const auto isVstAudioPlugin =
-        isAudioPlugin && bool{jucerProject.getProperty("buildVST")};
+      const auto isVstAudioPlugin = isAudioPlugin
+                                    && (bool{jucerProject.getProperty("buildVST")}
+                                        || pluginFormats.contains("buildVST"));
       const auto pluginHostVstOption = jucerProject.getChildWithName("JUCEOPTIONS")
                                          .getProperty("JUCE_PLUGINHOST_VST")
                                          .toString();
@@ -1415,8 +1418,9 @@ int main(int argc, char* argv[])
       }
 
       const auto supportsVst3 = exporterType == "XCODE_MAC" || isVSExporter;
-      const auto isVst3AudioPlugin =
-        isAudioPlugin && bool{jucerProject.getProperty("buildVST3")};
+      const auto isVst3AudioPlugin = isAudioPlugin
+                                     && (bool{jucerProject.getProperty("buildVST3")}
+                                         || pluginFormats.contains("buildVST3"));
       const auto pluginHostVst3Option = jucerProject.getChildWithName("JUCEOPTIONS")
                                           .getProperty("JUCE_PLUGINHOST_VST3")
                                           .toString();
@@ -1433,12 +1437,14 @@ int main(int argc, char* argv[])
 
       if (supportsAaxRtas && isAudioPlugin)
       {
-        if (bool{jucerProject.getProperty("buildAAX")})
+        if (bool{jucerProject.getProperty("buildAAX")}
+            || pluginFormats.contains("buildAAX"))
         {
           convertSetting(exporter, "aaxFolder", "AAX_SDK_FOLDER", {});
         }
 
-        if (bool{jucerProject.getProperty("buildRTAS")})
+        if (bool{jucerProject.getProperty("buildRTAS")}
+            || pluginFormats.contains("buildRTAS"))
         {
           convertSetting(exporter, "rtasFolder", "RTAS_SDK_FOLDER", {});
         }
