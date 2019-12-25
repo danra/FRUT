@@ -298,6 +298,9 @@ contributors:
       <a href="https://github.com/McMartin/FRUT/issues?q=is%3Aissue+author%3Adimitrisudell" title="Bug reports">🐛</a>
     </td>
     <td>
+      <a href="https://github.com/danra"><img src="https://github.com/danra.png" width="100"><br />Dan Raviv</a>
+      <br />
+      <a href="https://github.com/McMartin/FRUT/issues?q=is%3Aissue+author%3Adanra" title="Bug reports">🐛</a>
     </td>
   </tr>
   </tbody>
